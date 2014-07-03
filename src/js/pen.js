@@ -159,7 +159,6 @@
 
     var editor = this.config.editor;
     var toggle = function() {
-
       if(that._isDestroyed) return;
 
       utils.shift('toggle_menu', function() {

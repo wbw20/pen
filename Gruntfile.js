@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     jshint: {
-      files: ['Gruntfile.js', 'src/**/*.js'],
+      files: ['Gruntfile.js', 'src/js/**/*.js'],
       options: {
         globals: { 'console': false },
         bitwise: true,
@@ -34,14 +34,35 @@ module.exports = function(grunt) {
 
     uglify: {
       build: {
-        src: 'src/**/*.js',
-        dest: 'build/pen-<%= pkg.version %>.min.js'
+        src: 'src/js/**/*.js',
+        dest: 'build/pen.min.js'
       }
+    },
+
+    sass: {
+      dist: {
+        options: {
+          noCache: true
+        },
+        files: {
+          'build/pen.css': 'src/sass/pen.scss'
+        }
+      }
+    },
+
+    copy: {
+      main: {
+        flatten: true,
+        expand: true,
+        filter: 'isFile',
+        src: 'src/font/*',
+        dest: 'build/font/',
+      },
     },
 
     watch: {
       files: ['<%= jshint.files %>'],
-      tasks: ['jshint']
+      tasks: ['jshint', 'uglify', 'sass', 'copy']
     }
   });
 
@@ -49,8 +70,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'uglify', 'sass', 'copy']);
 
 };
