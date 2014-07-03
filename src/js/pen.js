@@ -145,7 +145,6 @@
     var menu = doc.createElement('div');
     menu.setAttribute('class', this.config.class + '-menu pen-menu');
     menu.innerHTML = icons;
-    menu.style.display = 'none';
 
     options.editor.appendChild((this._menu = menu));
 
@@ -158,30 +157,7 @@
     window.addEventListener('scroll', setpos);
 
     var editor = this.config.editor;
-    var toggle = function() {
-      if(that._isDestroyed) return;
 
-      utils.shift('toggle_menu', function() {
-        var range = that._sel;
-        if(!range.isCollapsed) {
-          //show menu
-          that._range = range.getRangeAt(0);
-          that.menu().highlight();
-          debugger
-        } else {
-          //hide menu
-          that._menu.style.display = 'none';
-        }
-      }, 200);
-    };
-
-    // toggle toolbar on mouse select
-    editor.addEventListener('mouseup', toggle);
-
-    // toggle toolbar on key select
-    editor.addEventListener('keyup', toggle);
-
-    // toggle toolbar on key select
     menu.addEventListener('click', function(e) {
       var action = e.target.getAttribute('data-action');
 
@@ -335,8 +311,6 @@
 
     // display block to caculate it's width & height
     menu.style.display = 'block';
-    menu.style.top = top - menu.clientHeight + 'px';
-    menu.style.left = left - (menu.clientWidth/2) + 'px';
 
     return this;
   };
@@ -356,7 +330,6 @@
 
     if(!isAJoke) {
       this._sel.removeAllRanges();
-      this._menu.style.display = 'none';
     }
     this._isDestroyed = destroy;
     this.config.editor[attr]('contenteditable', '');
