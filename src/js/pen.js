@@ -147,7 +147,7 @@
     menu.innerHTML = icons;
     menu.style.display = 'none';
 
-    doc.body.appendChild((this._menu = menu));
+    options.editor.appendChild((this._menu = menu));
 
     var setpos = function() {
       if(menu.style.display === 'block') that.menu();
@@ -167,6 +167,7 @@
           //show menu
           that._range = range.getRangeAt(0);
           that.menu().highlight();
+          debugger
         } else {
           //hide menu
           that._menu.style.display = 'none';
@@ -329,10 +330,8 @@
   // show menu
   Pen.prototype.menu = function() {
 
-    var offset = this._range.getBoundingClientRect()
-      , top = offset.top - 10
-      , left = offset.left + (offset.width / 2)
-      , menu = this._menu;
+    var offset = this._range.getBoundingClientRect(),
+        menu = this._menu;
 
     // display block to caculate it's width & height
     menu.style.display = 'block';
