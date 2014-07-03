@@ -33,6 +33,12 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      options: {
+        compress: {
+          drop_console: false,
+          drop_debugger: false
+        }
+      },
       build: {
         src: 'src/js/**/*.js',
         dest: 'build/pen.min.js'
@@ -60,9 +66,16 @@ module.exports = function(grunt) {
       },
     },
 
+    concat: {
+      dist: {
+        src: ['src/js/**/*.js'],
+        dest: 'build/pen.js',
+      },
+    },
+
     watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint', 'uglify', 'sass', 'copy']
+      files: ['src/**/*.js'],
+      tasks: ['concat', 'sass', 'copy']
     }
   });
 
@@ -72,8 +85,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
-  // Default task(s).
-  grunt.registerTask('default', ['jshint', 'uglify', 'sass', 'copy']);
+  // Custom tasks.
+  grunt.registerTask('default', ['concat', 'sass', 'copy']);
+  grunt.registerTask('dist', ['uglify', 'sass', 'copy']);
 
 };
