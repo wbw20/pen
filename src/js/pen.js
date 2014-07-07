@@ -158,6 +158,19 @@
 
     var editor = this.config.editor;
 
+    var updateRange = function() {
+      if(that._isDestroyed) return;
+
+      utils.shift('updateRange', function() {
+        var range = that._sel;
+        that._range = range.getRangeAt(0);
+      }, 200);
+    };
+
+    editor.addEventListener('mouseup', updateRange);
+    editor.addEventListener('keyup', updateRange);
+
+
     menu.addEventListener('click', function(e) {
       var action = e.target.getAttribute('data-action');
 
