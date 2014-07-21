@@ -16,6 +16,13 @@
 .pen em, .pen b, .pen strong{font-weight:700;}
 .pen pre{white-space:pre-wrap;padding:0.85em;background:#f8f8f8;}
 
+.pen code {
+  padding: 2px 4px;
+  color: #d14;
+  background-color: #f7f7f9;
+  border: 1px solid #e1e1e8;
+}
+
 /* block-level element margin */
 .pen p, .pen pre, .pen ul, .pen ol, .pen dl, .pen form, .pen table, .pen blockquote{margin-bottom:16px;}
 
