@@ -323,11 +323,9 @@
       }
 
       var code = document.createElement('code'),
-          range = document.getSelection().getRangeAt();
+          range = that._sel.getRangeAt();
       range.surroundContents(code);
-      that._sel.removeAllRanges();
-      that._sel.addRange(range);
-      return;
+      return that._sel.addRange(range);
     };
 
     this._actions = function(name, value) {
