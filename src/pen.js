@@ -319,13 +319,12 @@
 
     codespan = function(name) {
       if (that._sel.anchorNode.parentElement.tagName.toLowerCase() === 'code') {
-        console.log('within code');
+        return;
       }
 
       var code = document.createElement('code'),
-          range = document.createRange();
-      document.getSelection().getRangeAt().surroundContents(code);
-      range.selectNodeContents(code);
+          range = document.getSelection().getRangeAt();
+      range.surroundContents(code);
       that._sel.removeAllRanges();
       that._sel.addRange(range);
       return;
