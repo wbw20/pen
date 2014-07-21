@@ -53,7 +53,7 @@
       textarea: '<textarea name="content"></textarea>',
       list: [
         'blockquote', 'h2', 'h3', 'p', 'insertorderedlist', 'insertunorderedlist', 'inserthorizontalrule',
-        'indent', 'outdent', 'bold', 'italic', 'underline', 'createlink'
+        'indent', 'outdent', 'bold', 'codespan', 'italic', 'underline', 'createlink'
       ]
     };
 
@@ -281,6 +281,7 @@
     // allow command list
     reg = {
       block: /^(?:p|h[1-6]|blockquote|pre)$/,
+      codespan: /^(?:codespan)$/,
       inline: /^(?:bold|italic|underline|insertorderedlist|insertunorderedlist|indent|outdent)$/,
       source: /^(?:insertimage|createlink|unlink)$/,
       insert: /^(?:inserthorizontalrule|insert)$/
@@ -316,9 +317,15 @@
       return overall('formatblock', name);
     };
 
+    codespan = function(name) {
+      return document.getSelection().getRangeAt().surroundContents(document.createElement('code'));
+    };
+
     this._actions = function(name, value) {
       if(name.match(reg.block)) {
         block(name);
+      } else if(name.match(reg.codespan)) {
+        codespan(name);
       } else if(name.match(reg.inline) || name.match(reg.source)) {
         overall(name, value);
       } else if(name.match(reg.insert)) {
