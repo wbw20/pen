@@ -318,7 +318,13 @@
     };
 
     codespan = function(name) {
-      return document.getSelection().getRangeAt().surroundContents(document.createElement('code'));
+      var code = document.createElement('code'),
+          range = document.createRange();
+      document.getSelection().getRangeAt().surroundContents(code);
+      range.selectNodeContents(code);
+      that._sel.removeAllRanges();
+      that._sel.addRange(range);
+      return;
     };
 
     this._actions = function(name, value) {
