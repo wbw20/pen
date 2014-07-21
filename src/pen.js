@@ -318,6 +318,10 @@
     };
 
     codespan = function(name) {
+      if (that._sel.anchorNode.parentElement.tagName.toLowerCase() === 'code') {
+        console.log('within code');
+      }
+
       var code = document.createElement('code'),
           range = document.createRange();
       document.getSelection().getRangeAt().surroundContents(code);
