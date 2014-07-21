@@ -318,15 +318,25 @@
     };
 
     codespan = function(name) {
-      if (that._sel.anchorNode.parentElement.tagName.toLowerCase() === 'code') {
-        return;
+      var range = that._sel.getRangeAt(),
+          parent = that._sel.anchorNode.parentElement;
+
+      /* if we are already in a code span, return */
+      if (_containsCodespan(parent)) { return; }
+
+      that._sel.removeAllRanges();
+      range.surroundContents(document.createElement('code'));
+      that._sel.addRange(range);
+    };
+
+    _containsCodespan = function(parent) {
+      while(parent.tagName.toLowerCase() !== 'body') {
+        if (parent.tagName.toLowerCase() === 'code') { return true; }
+        parent = parent.parentElement;
       }
 
-      var code = document.createElement('code'),
-          range = that._sel.getRangeAt();
-      range.surroundContents(code);
-      return that._sel.addRange(range);
-    };
+      return false;
+    }
 
     this._actions = function(name, value) {
       if(name.match(reg.block)) {
