@@ -321,17 +321,25 @@
       var range = that._sel.getRangeAt(),
           parent = that._sel.anchorNode.parentElement;
 
-      /* if we are already in a code span, return */
-      if (_containsCodespan(parent)) { return; }
+      if (_codespanParent(parent)) {
+        var codespan = _codespanParent(parent),
+            codespanParent = codespan.parentElement;
+
+        var start = codespanParent.innerHTML.indexOf(codespan.outerHTML);
+        codespan.remove();
+        codespanParent.innerHTML = codespanParent.innerHTML.slice(0, start) + codespan.innerHTML + codespanParent.innerHTML.slice(start);
+      } else {
+        range.surroundContents(document.createElement('code'));
+      }
 
       that._sel.removeAllRanges();
-      range.surroundContents(document.createElement('code'));
       that._sel.addRange(range);
     };
 
-    _containsCodespan = function(parent) {
-      while(parent.tagName.toLowerCase() !== 'body') {
-        if (parent.tagName.toLowerCase() === 'code') { return true; }
+    /* get any parent that is a codespan */
+    _codespanParent = function(parent) {
+      while (parent.tagName.toLowerCase() !== 'body') {
+        if (parent.tagName.toLowerCase() === 'code') { return parent; }
         parent = parent.parentElement;
       }
 
