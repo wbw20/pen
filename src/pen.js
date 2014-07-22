@@ -344,6 +344,10 @@
       return _highlight(range);
     };
 
+    _isExactlyWithin = function(range, node) {
+      return node.innerHTML === range.toString();
+    };
+
     _highlight = function(range) {
       that._sel.removeAllRanges();
       that._sel.addRange(range);
