@@ -329,8 +329,10 @@
         return _highlight(range);
       } else if (begins) {
         range.setStartBefore(begins);
+        _removeCodeTags(begins);
       } else if (ends) {
         range.setEndBefore(ends);
+        _removeCodeTags(ends);
       }
 
       range.surroundContents(document.createElement('code'));
@@ -346,8 +348,8 @@
       return node.tagName.toLowerCase() === 'code' ? node : false;
     };
 
-    _removeCodeTags = function(html) {
-      return html.replace(/(<\/?code>)/, '');
+    _removeCodeTags = function(node) {
+      node.outerHTML = node.outerHTML.replace(/(<\/?code>)/g, '');
     }
 
     /* get any parent that is a codespan */
