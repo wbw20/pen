@@ -321,14 +321,12 @@
       var range = that._sel.getRangeAt(),
           parent = that._sel.anchorNode.parentElement;
 
-
       var begins = _isCodespan(range.startContainer.parentElement),
           ends = _isCodespan(range.endContainer.parentElement);
 
       if (begins && ends) {
         if (_isExactlyWithin(range, begins)) {
-          range.selectNode(_deCodespan(begins));
-          return _highlight(range);
+          _deTag(begins, range);
         }
 
         return _highlight(range);
@@ -349,6 +347,19 @@
       return _highlight(range);
     };
 
+    /* remove this node's tag, leaving only its innnerHTML in the parent */
+    _deTag = function(node, range) {
+      var parent = node.parentElement,
+          clone = document.createElement('el'),
+          start = range.startOffset, end = range.endOffset;
+
+      clone.innerHTML = node.innerHTML;
+      parent.replaceChild(clone, node);
+      _removeElTags(parent);
+      range.selectNodeContents(parent);
+      return clone;
+    };
+
     _isExactlyWithin = function(range, node) {
       return node.innerHTML === range.toString();
     };
@@ -364,6 +375,10 @@
 
     _removeCodeTags = function(node) {
       node.innerHTML = node.innerHTML.replace(/(<\/?code>)/g, '');
+    };
+
+    _removeElTags = function(node) {
+      node.innerHTML = node.innerHTML.replace(/(<\/?el>)/g, '');
     };
 
     _deCodespan = function(codespan) {
