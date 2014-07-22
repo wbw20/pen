@@ -327,8 +327,7 @@
 
       if (begins && ends) {
         if (_isExactlyWithin(range, begins)) {
-          var clone = _deCodespan(begins);
-          range.selectNode(clone);
+          range.selectNode(_deCodespan(begins));
           return _highlight(range);
         }
 
