@@ -329,13 +329,16 @@
         return _highlight(range);
       } else if (begins) {
         range.setStartBefore(begins);
-        _removeCodeTags(begins);
+        range.surroundContents(document.createElement('code'));
+        _removeCodeTags(begins.parentElement);
       } else if (ends) {
-        range.setEndBefore(ends);
-        _removeCodeTags(ends);
+        range.setEndAfter(ends);
+        range.surroundContents(document.createElement('code'));
+        _removeCodeTags(ends.parentElement);
+      } else {
+        range.surroundContents(document.createElement('code'));
       }
 
-      range.surroundContents(document.createElement('code'));
       return _highlight(range);
     };
 
@@ -349,7 +352,7 @@
     };
 
     _removeCodeTags = function(node) {
-      node.outerHTML = node.outerHTML.replace(/(<\/?code>)/g, '');
+      node.innerHTML = node.innerHTML.replace(/(<\/?code>)/g, '');
     }
 
     /* get any parent that is a codespan */
