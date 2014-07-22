@@ -321,13 +321,16 @@
       var range = that._sel.getRangeAt(),
           parent = that._sel.anchorNode.parentElement;
 
-      if (_codespanParent(parent)) {
-        var codespan = _codespanParent(parent),
-            codespanParent = codespan.parentElement;
+      _toggleCodespan(range);
 
-        var start = codespanParent.innerHTML.indexOf(codespan.outerHTML);
-        codespan.remove();
-        codespanParent.innerHTML = codespanParent.innerHTML.slice(0, start) + codespan.innerHTML + codespanParent.innerHTML.slice(start);
+      if (_codespanParent(parent)) {
+        // var codespan = _codespanParent(parent),
+        //     codespanParent = codespan.parentElement;
+
+        // var start = codespanParent.innerHTML.indexOf(codespan.outerHTML);
+        // codespan.remove();
+        // // _toggleCodespan(codespan.outerHTML);
+        // codespanParent.innerHTML = codespanParent.innerHTML.slice(0, start) + codespan.innerHTML + codespanParent.innerHTML.slice(start);
       } else {
         range.surroundContents(document.createElement('code'));
       }
@@ -336,15 +339,36 @@
       that._sel.addRange(range);
     };
 
+    _isCodespan = function(node) {
+      return node.tagName.toLowerCase() === 'code';
+    };
+
+    _toggleCodespan = function(range) {
+      var begins = _isCodespan(range.startContainer.parentElement),
+          ends = _isCodespan(range.endContainer.parentElement);
+
+      if (begins && ends) {
+        console.log('within');
+      } else if (begins) {
+        console.log('left side onto');
+      } else if (ends) {
+        console.log('right side onto');
+      } else {
+        console.log('outside');
+      }
+
+      return;
+    };
+
     /* get any parent that is a codespan */
     _codespanParent = function(parent) {
       while (parent.tagName.toLowerCase() !== 'body') {
-        if (parent.tagName.toLowerCase() === 'code') { return parent; }
+        if (parent.outerHTML.slice(0, 6) === '<code>' && parent.outerHTML.slice(parent.outerHTML.length - 7) === '</code>') { return parent; }
         parent = parent.parentElement;
       }
 
       return false;
-    }
+    };
 
     this._actions = function(name, value) {
       if(name.match(reg.block)) {
