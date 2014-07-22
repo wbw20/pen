@@ -321,17 +321,17 @@
       var range = that._sel.getRangeAt(),
           parent = that._sel.anchorNode.parentElement;
 
-      _toggleCodespan(range);
+      var begins = _isCodespan(range.startContainer.parentElement),
+          ends = _isCodespan(range.endContainer.parentElement);
 
-      if (_codespanParent(parent)) {
-        // var codespan = _codespanParent(parent),
-        //     codespanParent = codespan.parentElement;
-
-        // var start = codespanParent.innerHTML.indexOf(codespan.outerHTML);
-        // codespan.remove();
-        // // _toggleCodespan(codespan.outerHTML);
-        // codespanParent.innerHTML = codespanParent.innerHTML.slice(0, start) + codespan.innerHTML + codespanParent.innerHTML.slice(start);
+      if (_codespanParent(parent) || begins && ends) {
+        console.log('within');
+      } else if (begins) {
+        console.log('left side onto');
+      } else if (ends) {
+        console.log('right side onto');
       } else {
+        console.log('outside');
         range.surroundContents(document.createElement('code'));
       }
 
@@ -341,23 +341,6 @@
 
     _isCodespan = function(node) {
       return node.tagName.toLowerCase() === 'code';
-    };
-
-    _toggleCodespan = function(range) {
-      var begins = _isCodespan(range.startContainer.parentElement),
-          ends = _isCodespan(range.endContainer.parentElement);
-
-      if (begins && ends) {
-        console.log('within');
-      } else if (begins) {
-        console.log('left side onto');
-      } else if (ends) {
-        console.log('right side onto');
-      } else {
-        console.log('outside');
-      }
-
-      return;
     };
 
     /* get any parent that is a codespan */
