@@ -326,6 +326,10 @@
           ends = _isCodespan(range.endContainer.parentElement);
 
       if (begins && ends) {
+        if (_isExactlyWithin(range, begins)) {
+          _deCodespan(ends.parentElement);
+        }
+
         return _highlight(range);
       } else if (begins) {
         range.setStartBefore(begins);
@@ -359,7 +363,11 @@
 
     _removeCodeTags = function(node) {
       node.innerHTML = node.innerHTML.replace(/(<\/?code>)/g, '');
-    }
+    };
+
+    _deCodespan = function(codespan) {
+      codespan.outerHTML = codespan.outerHTML.replace(/(<\/?code>)/g, '');
+    };
 
     /* get any parent that is a codespan */
     _codespanParent = function(parent) {
