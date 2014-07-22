@@ -327,7 +327,9 @@
 
       if (begins && ends) {
         if (_isExactlyWithin(range, begins)) {
-          _deCodespan(ends.parentElement);
+          var clone = _deCodespan(begins);
+          range.selectNode(clone);
+          return _highlight(range);
         }
 
         return _highlight(range);
@@ -366,7 +368,12 @@
     };
 
     _deCodespan = function(codespan) {
-      codespan.outerHTML = codespan.outerHTML.replace(/(<\/?code>)/g, '');
+      var parent = codespan.parentElement,
+          clone = document.createElement('el');
+
+      clone.innerHTML = codespan.innerHTML;
+      parent.replaceChild(clone, codespan);
+      return clone;
     };
 
     /* get any parent that is a codespan */
