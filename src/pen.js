@@ -326,17 +326,18 @@
           ends = _isCodespan(range.endContainer.parentElement);
 
       if (begins && ends) {
-        console.log('within');
+        return _highlight(range);
       } else if (begins) {
         range.setStartBefore(begins);
-        range.surroundContents(document.createElement('code'));
       } else if (ends) {
         range.setEndBefore(ends);
-        range.surroundContents(document.createElement('code'));
-      } else if (!_codespanParent(parent)) {
-        range.surroundContents(document.createElement('code'));
       }
 
+      range.surroundContents(document.createElement('code'));
+      return _highlight(range);
+    };
+
+    _highlight = function(range) {
       that._sel.removeAllRanges();
       that._sel.addRange(range);
     };
