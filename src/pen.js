@@ -336,7 +336,9 @@
         range.surroundContents(document.createElement('code'));
         _removeCodeTags(ends.parentElement);
       } else {
-        range.surroundContents(document.createElement('code'));
+        var node = document.createElement('code');
+        range.surroundContents(node);
+        _removeCodeTags(node);
       }
 
       return _highlight(range);
