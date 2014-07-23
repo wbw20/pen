@@ -115,7 +115,7 @@
   Pen.prototype._effectNode = function(el, returnAsNodeName) {
     var nodes = [];
     while(el !== this.config.editor) {
-      if(el.nodeName.match(/(?:[pubia]|h[1-6]|blockquote|[uo]l|li)/i)) {
+      if(el.nodeName.match(/(?:[pubia]|h[1-6]|blockquote|code|[uo]l|li)/i)) {
         nodes.push(returnAsNodeName ? el.nodeName.toLowerCase() : el);
       }
       el = el.parentNode;
@@ -255,6 +255,8 @@
           return (menu.querySelector('input').value = item.href), highlight('createlink');
         case 'i':
           return highlight('italic');
+        case 'code':
+          return highlight('codespan');
         case 'u':
           return highlight('underline');
         case 'b':
