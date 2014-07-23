@@ -319,26 +319,30 @@
 
     codespan = function(name) {
       var range = that._sel.getRangeAt(),
-          begins = _isCodespan(range.startContainer.parentElement),
-          ends = _isCodespan(range.endContainer.parentElement);
+          begins = range.startContainer.parentElement,
+          ends = range.endContainer.parentElement;
 
-      if (begins && ends) {
-        if (_isExactlyWithin(range, begins) || begins !== ends) {
+      if (_isCodespan(begins) && _isCodespan(ends)) {
+        if (_isExactlyWithin(range, begins)) {
           _deTag(begins, range);
         } else {
           _absorbRight(begins, range);
-          _absorbLeft(begins, range);
+          _absorbLeft(ends, range);
         }
-      } else if (begins) {
+      } else if (_isCodespan(begins)) {
         _absorbRight(begins, range);
-      } else if (ends) {
+      } else if (_isCodespan(ends)) {
         _absorbLeft(ends, range);
       } else {
-        var node = document.createElement('code');
-        range.surroundContents(node);
-        var children = node.getElementsByTagName('code');
-        for (var i = 0; i < children.length; i++) {
-          _deTag(children[i], range);
+        if (begins !== ends) {
+          console.log('selection cannot cross');
+        } else {
+          var node = document.createElement('code');
+          range.surroundContents(node);
+          var children = node.getElementsByTagName('code');
+          for (var i = 0; i < children.length; i++) {
+            _deTag(children[i], range);
+          }
         }
       }
 
