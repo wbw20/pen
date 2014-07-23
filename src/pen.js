@@ -333,17 +333,17 @@
       } else if (begins) {
         range.setStartBefore(begins);
         range.surroundContents(document.createElement('code'));
-        _deTag(begins);
+        _deTag(begins, range);
       } else if (ends) {
         range.setEndAfter(ends);
         range.surroundContents(document.createElement('code'));
-        _deTag(ends);
+        _deTag(ends, range);
       } else {
         var node = document.createElement('code');
         range.surroundContents(node);
         var children = node.getElementsByTagName('code');
         for (var i = 0; i < children.length; i++) {
-          _deTag(children[i]);
+          _deTag(children[i], range);
         }
       }
 
