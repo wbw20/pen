@@ -384,7 +384,6 @@
       range.setEndAfter(right);
       range.surroundContents(document.createElement('code'));
       _deTag(left, range);
-      _deTag(right, range);
     };
 
     _isExactlyWithin = function(range, node) {
