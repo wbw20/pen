@@ -327,6 +327,7 @@
           _deTag(begins, range);
         } else if (begins !== ends) {
           console.log('its the wierd case');
+          _merge(begins, ends, range);
         }
       } else if (_isWithinCopespan(begins)) {
         _absorbRight(begins, range);
@@ -376,6 +377,14 @@
         range.setEndAfter(node);
         range.surroundContents(document.createElement('code'));
         _deTag(node, range);
+    };
+
+    _merge = function(left, right, range) {
+      range.setStartBefore(left);
+      range.setEndAfter(right);
+      range.surroundContents(document.createElement('code'));
+      _deTag(left, range);
+      _deTag(right, range);
     };
 
     _isExactlyWithin = function(range, node) {
