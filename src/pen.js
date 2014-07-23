@@ -319,9 +319,7 @@
 
     codespan = function(name) {
       var range = that._sel.getRangeAt(),
-          parent = that._sel.anchorNode.parentElement;
-
-      var begins = _isCodespan(range.startContainer.parentElement),
+          begins = _isCodespan(range.startContainer.parentElement),
           ends = _isCodespan(range.endContainer.parentElement);
 
       if (begins && ends) {
@@ -374,25 +372,6 @@
 
     _isCodespan = function(node) {
       return node.tagName.toLowerCase() === 'code' ? node : false;
-    };
-
-    _deCodespan = function(codespan) {
-      var parent = codespan.parentElement,
-          clone = document.createElement('el');
-
-      clone.innerHTML = codespan.innerHTML;
-      parent.replaceChild(clone, codespan);
-      return clone;
-    };
-
-    /* get any parent that is a codespan */
-    _codespanParent = function(parent) {
-      while (parent.tagName.toLowerCase() !== 'body') {
-        if (parent.outerHTML.slice(0, 6) === '<code>' && parent.outerHTML.slice(parent.outerHTML.length - 7) === '</code>') { return parent; }
-        parent = parent.parentElement;
-      }
-
-      return false;
     };
 
     this._actions = function(name, value) {
