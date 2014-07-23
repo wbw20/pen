@@ -325,6 +325,8 @@
       if (_isWithinCopespan(begins) && _isWithinCopespan(ends)) {
         if (_isExactlyWithin(range, begins)) {
           _deTag(begins, range);
+        } else if (begins !== ends) {
+          console.log('its the wierd case');
         }
       } else if (_isWithinCopespan(begins)) {
         _absorbRight(begins, range);
@@ -334,29 +336,22 @@
         if (begins !== ends) {
           console.log('selection cannot cross');
         } else {
-          var node = document.createElement('code');
-          range.surroundContents(node);
-          var children = node.getElementsByTagName('code');
-          for (var i = 0; i < children.length; i++) {
-            _deTag(children[i], range);
-          }
+          _tag(range);
         }
       }
 
       return _highlight(range);
     };
 
-    _absorbRight = function(node, range) {
-        range.setStartBefore(node);
-        range.surroundContents(document.createElement('code'));
-        _deTag(node, range);
-    };
-
-    _absorbLeft = function(node, range) {
-        range.setEndAfter(node);
-        range.surroundContents(document.createElement('code'));
-        _deTag(node, range);
-    };
+    /* turn this range into a codespan */
+    _tag = function(range) {
+      var node = document.createElement('code');
+      range.surroundContents(node);
+      var children = node.getElementsByTagName('code');
+      for (var i = 0; i < children.length; i++) {
+        _deTag(children[i], range);
+      }
+    }
 
     /* remove this node's tag, leaving only its innnerHTML in the parent */
     _deTag = function(node, range) {
@@ -371,6 +366,18 @@
       return clone;
     };
 
+    _absorbRight = function(node, range) {
+        range.setStartBefore(node);
+        range.surroundContents(document.createElement('code'));
+        _deTag(node, range);
+    };
+
+    _absorbLeft = function(node, range) {
+        range.setEndAfter(node);
+        range.surroundContents(document.createElement('code'));
+        _deTag(node, range);
+    };
+
     _isExactlyWithin = function(range, node) {
       return node.innerHTML === range.toString();
     };
@@ -378,10 +385,6 @@
     _highlight = function(range) {
       that._sel.removeAllRanges();
       that._sel.addRange(range);
-    };
-
-    _isCodespan = function(node) {
-      return node.tagName.toLowerCase() === 'code' ? node : false;
     };
 
     _isWithinCopespan = function(node) {
