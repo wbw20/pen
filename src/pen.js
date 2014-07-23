@@ -322,12 +322,8 @@
           begins = _isCodespan(range.startContainer.parentElement),
           ends = _isCodespan(range.endContainer.parentElement);
 
-      if (begins && ends) {
-        if (_isExactlyWithin(range, begins)) {
-          _deTag(begins, range);
-        }
-
-        return _highlight(range);
+      if (begins && ends && _isExactlyWithin(range, begins)) {
+        _deTag(begins, range);
       } else if (begins) {
         range.setStartBefore(begins);
         range.surroundContents(document.createElement('code'));
