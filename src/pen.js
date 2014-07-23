@@ -322,16 +322,13 @@
           begins = range.startContainer.parentElement,
           ends = range.endContainer.parentElement;
 
-      if (_isCodespan(begins) && _isCodespan(ends)) {
+      if (_isWithinCopespan(begins) && _isWithinCopespan(ends)) {
         if (_isExactlyWithin(range, begins)) {
           _deTag(begins, range);
-        } else {
-          _absorbRight(begins, range);
-          _absorbLeft(ends, range);
         }
-      } else if (_isCodespan(begins)) {
+      } else if (_isWithinCopespan(begins)) {
         _absorbRight(begins, range);
-      } else if (_isCodespan(ends)) {
+      } else if (_isWithinCopespan(ends)) {
         _absorbLeft(ends, range);
       } else {
         if (begins !== ends) {
@@ -385,6 +382,18 @@
 
     _isCodespan = function(node) {
       return node.tagName.toLowerCase() === 'code' ? node : false;
+    };
+
+    _isWithinCopespan = function(node) {
+      while (node.tagName.toLowerCase() !== 'body') {
+        if (node.tagName.toLowerCase() === 'code') {
+          return true;
+        }
+
+        node = node.parentElement;
+      }
+
+      return false;
     };
 
     this._actions = function(name, value) {
