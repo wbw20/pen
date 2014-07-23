@@ -333,15 +333,18 @@
       } else if (begins) {
         range.setStartBefore(begins);
         range.surroundContents(document.createElement('code'));
-        _removeCodeTags(begins.parentElement);
+        _deTag(begins);
       } else if (ends) {
         range.setEndAfter(ends);
         range.surroundContents(document.createElement('code'));
-        _removeCodeTags(ends.parentElement);
+        _deTag(ends);
       } else {
         var node = document.createElement('code');
         range.surroundContents(node);
-        _removeCodeTags(node);
+        var children = node.getElementsByTagName('code');
+        for (var i = 0; i < children.length; i++) {
+          _deTag(children[i]);
+        }
       }
 
       return _highlight(range);
@@ -355,7 +358,7 @@
 
       clone.innerHTML = node.innerHTML;
       parent.replaceChild(clone, node);
-      _removeElTags(parent);
+      parent.innerHTML = parent.innerHTML.replace(/(<\/?el>)/g, '');
       range.selectNodeContents(parent);
       return clone;
     };
@@ -371,14 +374,6 @@
 
     _isCodespan = function(node) {
       return node.tagName.toLowerCase() === 'code' ? node : false;
-    };
-
-    _removeCodeTags = function(node) {
-      node.innerHTML = node.innerHTML.replace(/(<\/?code>)/g, '');
-    };
-
-    _removeElTags = function(node) {
-      node.innerHTML = node.innerHTML.replace(/(<\/?el>)/g, '');
     };
 
     _deCodespan = function(codespan) {
