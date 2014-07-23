@@ -322,16 +322,17 @@
           begins = _isCodespan(range.startContainer.parentElement),
           ends = _isCodespan(range.endContainer.parentElement);
 
-      if (begins && ends && _isExactlyWithin(range, begins)) {
-        _deTag(begins, range);
+      if (begins && ends) {
+        if (_isExactlyWithin(range, begins) || begins !== ends) {
+          _deTag(begins, range);
+        } else {
+          _absorbRight(begins, range);
+          _absorbLeft(begins, range);
+        }
       } else if (begins) {
-        range.setStartBefore(begins);
-        range.surroundContents(document.createElement('code'));
-        _deTag(begins, range);
+        _absorbRight(begins, range);
       } else if (ends) {
-        range.setEndAfter(ends);
-        range.surroundContents(document.createElement('code'));
-        _deTag(ends, range);
+        _absorbLeft(ends, range);
       } else {
         var node = document.createElement('code');
         range.surroundContents(node);
@@ -342,6 +343,18 @@
       }
 
       return _highlight(range);
+    };
+
+    _absorbRight = function(node, range) {
+        range.setStartBefore(node);
+        range.surroundContents(document.createElement('code'));
+        _deTag(node, range);
+    };
+
+    _absorbLeft = function(node, range) {
+        range.setEndAfter(node);
+        range.surroundContents(document.createElement('code'));
+        _deTag(node, range);
     };
 
     /* remove this node's tag, leaving only its innnerHTML in the parent */
