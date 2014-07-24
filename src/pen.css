@@ -94,8 +94,6 @@
 .pen-menu .icon-justifycenter:before { content: '\e80b'; } /* '' */
 .pen-menu .icon-justifyright:before { content: '\e80c'; } /* '' */
 .pen-menu .icon-justifyfull:before { content: '\e80d'; } /* '' */
-.pen-menu .icon-outdent:before { content: '\e800'; } /* '' */
-.pen-menu .icon-indent:before { content: '\e801'; } /* '' */
 .pen-menu .icon-mode:before { content: '\e813'; } /* '' */
 .pen-menu .icon-fullscreen:before { content: '\e80e'; } /* '' */
 .pen-menu .icon-insertunorderedlist:before { content: '\e802'; } /* '' */

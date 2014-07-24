@@ -53,7 +53,7 @@
       textarea: '<textarea name="content"></textarea>',
       list: [
         'blockquote', 'h2', 'h3', 'p', 'insertorderedlist', 'insertunorderedlist', 'inserthorizontalrule',
-        'indent', 'outdent', 'bold', 'codespan', 'italic', 'underline', 'createlink'
+        'bold', 'codespan', 'italic', 'underline', 'createlink'
       ]
     };
 
@@ -267,8 +267,6 @@
           return highlight('insertorderedlist');
         case 'ol':
           return highlight('insertorderedlist');
-        case 'li':
-          return highlight('indent');
         default :
           highlight(tag);
       }
@@ -284,7 +282,7 @@
     reg = {
       block: /^(?:p|h[1-6]|blockquote|pre)$/,
       codespan: /^(?:codespan)$/,
-      inline: /^(?:bold|italic|underline|insertorderedlist|insertunorderedlist|indent|outdent)$/,
+      inline: /^(?:bold|italic|underline|insertorderedlist|insertunorderedlist)$/,
       source: /^(?:insertimage|createlink|unlink)$/,
       insert: /^(?:inserthorizontalrule|insert)$/
     };
