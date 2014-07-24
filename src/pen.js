@@ -189,11 +189,11 @@
           tag = document.createElement(parent.tagName);
           range.deleteContents();
           range.setEndAfter(parent);
-          tag.innerHTML = range.toString();
+          tag.innerHTML = range.toString() || '<br>';
           range.deleteContents();
           range.insertNode(tag);
-          range.setStartAfter(tag);
-          range.setEndAfter(tag);
+          range.setStartBefore(tag);
+          range.setEndBefore(tag);
           range.collapse(false);
           selection.removeAllRanges();
           selection.addRange(range);
