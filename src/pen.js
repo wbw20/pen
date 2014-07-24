@@ -158,8 +158,7 @@
     window.addEventListener('scroll', setpos);
 
     var editor = this.config.editor;
-    var toggle = function() {
-
+    var toggle = function(event) {
       if(that._isDestroyed) return;
 
       utils.shift('toggle_menu', function() {
@@ -177,6 +176,46 @@
 
     // toggle toolbar on mouse select
     editor.addEventListener('mouseup', toggle);
+
+    var linebreak = function(event) {
+      if (event.which === 13) {
+        var selection = window.getSelection(),
+            range = selection.getRangeAt(0),
+            parent = _block(range.startContainer),
+            tag;
+
+        if (event.shiftKey) {
+          var contents;
+          tag = document.createElement(parent.tagName);
+          range.deleteContents();
+          range.setEndAfter(parent);
+          tag.innerHTML = range.toString();
+          range.deleteContents();
+          range.insertNode(tag);
+          range.setStartAfter(tag);
+          range.setEndAfter(tag);
+          range.collapse(false);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        } else {
+          tag = document.createElement('br');
+          range.deleteContents();
+          range.insertNode(tag);
+          range.setStartAfter(tag);
+          range.setEndAfter(tag);
+          range.collapse(false);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+
+        event.preventDefault();
+        return false;
+      }
+    }
+
+    // prevent execCommand from adding a new block level element
+    // and instead just add a br within this block
+    editor.addEventListener('keydown', linebreak);
 
     // toggle toolbar on key select
     editor.addEventListener('keyup', toggle);
@@ -275,6 +314,15 @@
     return this;
   };
 
+  /* Get the relevant parent */
+  function _block(node) {
+    while(node.nodeType !== 1) {
+      node = node.parentNode;
+    }
+
+    return node;
+  }
+
   Pen.prototype.actions = function() {
     var that = this, reg, block, overall, insert;
 
@@ -298,11 +346,9 @@
 
     insert = function(name) {
       var range = that._sel.getRangeAt(0)
-        , node = range.startContainer;
+        , node = _block(range.startContainer);
 
-      while(node.nodeType !== 1) {
-        node = node.parentNode;
-      }
+      
 
       range.selectNode(node);
       range.collapse(false);
