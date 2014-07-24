@@ -348,8 +348,6 @@
       var range = that._sel.getRangeAt(0)
         , node = _block(range.startContainer);
 
-      
-
       range.selectNode(node);
       range.collapse(false);
       return overall(name);
