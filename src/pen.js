@@ -115,7 +115,7 @@
   Pen.prototype._effectNode = function(el, returnAsNodeName) {
     var nodes = [];
     while(el !== this.config.editor) {
-      if(el.nodeName.match(/(?:[pubia]|h[1-6]|blockquote|code|[uo]l|li)/i)) {
+      if(el.nodeName.match(/(?:[pia]|\Au\z|\Ab\z|h[1-6]|code|[uo]l|li)/i)) {
         nodes.push(returnAsNodeName ? el.nodeName.toLowerCase() : el);
       }
       el = el.parentNode;
