@@ -11,18 +11,6 @@
     return Object.prototype.toString.call(obj).slice(8, -1) === type;
   };
 
-  // copy props from a obj
-  utils.copy = function(defaults, source) {
-    for(var p in source) {
-      if(source.hasOwnProperty(p)) {
-        var val = source[p];
-        defaults[p] = this.is(val, 'Object') ? this.copy({}, val) :
-          this.is(val, 'Array') ? this.copy([], val) : val;
-      }
-    }
-    return defaults;
-  };
-
   // log
   utils.log = function(message, force) {
     if(window._pen_debug_mode_on || force) console.log('%cPEN DEBUGGER: %c' + message, 'font-family:arial,sans-serif;color:#1abf89;line-height:2em;', 'font-family:cursor,monospace;color:#333;');
@@ -66,7 +54,7 @@
     } else if(config.match && config.match(/^#[\S]+$/)) {
       defaults.editor = doc.getElementById(config.slice(1));
     } else {
-      defaults = utils.copy(defaults, config);
+      defaults = _.extend(defaults, config);
     }
 
     return defaults;
