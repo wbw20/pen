@@ -3,6 +3,9 @@
 
   var Pen, FakePen, utils = {};
 
+  var blocks = ['blockquote', 'p', 'h1', 'h2', 'ul', 'ol'],
+      semiblocks = ['li'];
+
   // type detect
   utils.is = function(obj, type) {
     return Object.prototype.toString.call(obj).slice(8, -1) === type;
