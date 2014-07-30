@@ -16,23 +16,6 @@
     if(window._pen_debug_mode_on || force) console.log('%cPEN DEBUGGER: %c' + message, 'font-family:arial,sans-serif;color:#1abf89;line-height:2em;', 'font-family:cursor,monospace;color:#333;');
   };
 
-  // shift a function
-  utils.shift = function(key, fn, time) {
-    time = time || 50;
-    var queue = this['_shift_fn' + key], timeout = 'shift_timeout' + key, current;
-    if ( queue ) {
-      queue.concat([fn, time]);
-    }
-    else {
-      queue = [[fn, time]];
-    }
-    current = queue.pop();
-    clearTimeout(this[timeout]);
-    this[timeout] = setTimeout(function() {
-      current[0]();
-    }, time);
-  };
-
   // merge: make it easy to have a fallback
   utils.merge = function(config) {
 
@@ -149,10 +132,7 @@
     window.addEventListener('scroll', setpos);
 
     var editor = this.config.editor;
-    var toggle = function(event) {
-      if(that._isDestroyed) return;
-
-      utils.shift('toggle_menu', function() {
+    var show = _.debounce(function() {
         var range = that._sel;
         if(!range.isCollapsed) {
           //show menu
@@ -163,6 +143,8 @@
           that._menu.style.display = 'none';
         }
       }, 200);
+    var toggle = function(event) {
+      if(!that._isDestroyed) show();
     };
 
     // toggle toolbar on mouse select
