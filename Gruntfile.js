@@ -36,21 +36,28 @@ module.exports = function(grunt) {
       build: {
         src: 'src/**/*.js',
         dest: 'build/pen-<%= pkg.version %>.min.js'
-      }
+      },
+    },
+
+    concat: {
+      build: {
+        src: ['bower_components/underscore/underscore.js', 'src/**/*.js'],
+        dest: 'build/pen.js',
+      },
     },
 
     watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint']
+      files: ['src/**/*.js', 'bower_components'],
+      tasks: ['concat']
     }
   });
 
   // Plugins
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'uglify']);
-
+  grunt.registerTask('default', ['concat']);
 };

@@ -1,7 +1,7 @@
 {
   "name": "pen",
   "version": "0.0.2",
-  "homepage": "https://github.com/sofish/pen",
+  "homepage": "https://github.com/wbw20/pen",
   "description": "enjoy live editing(+markdown)",
   "main": "pen.js",
   "keywords": [
@@ -10,8 +10,11 @@
     "markdown"
   ],
   "authors": [
-    "sofish"
+    "wbw20"
   ],
+  "dependencies": {
+    "underscore": "latest"
+  },
   "license": "MIT",
   "ignore": [
     "**/.*",
