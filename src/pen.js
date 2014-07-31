@@ -16,11 +16,6 @@
     ]
   };
 
-  // type detect
-  utils.is = function(obj, type) {
-    return Object.prototype.toString.call(obj).slice(8, -1) === type;
-  };
-
   // log
   utils.log = function(message, force) {
     if(window._pen_debug_mode_on || force) console.log('%cPEN DEBUGGER: %c' + message, 'font-family:arial,sans-serif;color:#1abf89;line-height:2em;', 'font-family:cursor,monospace;color:#333;');
