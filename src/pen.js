@@ -1,7 +1,7 @@
 /*! Licensed under MIT, https://github.com/sofish/pen */
 (function(doc) {
 
-  var Pen, FakePen, utils = {};
+  var Pen, utils = {};
 
   var blocks = ['blockquote', 'p', 'h1', 'h2', 'ul', 'ol'],
       semiblocks = ['li'];
@@ -531,20 +531,7 @@
     return this.destroy('it\'s a joke');
   };
 
-  // a fallback for old browers
-  FakePen = function(config) {
-    if(!config) return utils.log('can\'t find config', true);
-
-    var options = _.extend(defaults, config)
-      , klass = options.editor.getAttribute('class');
-
-    klass = klass ? klass.replace(/\bpen\b/g, '') + ' pen-textarea ' + options.class : 'pen pen-textarea';
-    options.editor.setAttribute('class', klass);
-    options.editor.innerHTML = options.textarea;
-    return options.editor;
-  };
-
   // make it accessible
-  this.Pen = doc.getSelection ? Pen : FakePen;
+  this.Pen = Pen;
 
 }(document));
