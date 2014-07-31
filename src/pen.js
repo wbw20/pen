@@ -6,6 +6,16 @@
   var blocks = ['blockquote', 'p', 'h1', 'h2', 'ul', 'ol'],
       semiblocks = ['li'];
 
+  var defaults = {
+    class: 'pen',
+    debug: false,
+    textarea: '<textarea name="content"></textarea>',
+    list: [
+      'blockquote', 'h2', 'h3', 'p', 'insertorderedlist', 'insertunorderedlist', 'inserthorizontalrule',
+      'bold', 'codespan', 'italic', 'underline', 'createlink'
+    ]
+  };
+
   // type detect
   utils.is = function(obj, type) {
     return Object.prototype.toString.call(obj).slice(8, -1) === type;
@@ -16,54 +26,27 @@
     if(window._pen_debug_mode_on || force) console.log('%cPEN DEBUGGER: %c' + message, 'font-family:arial,sans-serif;color:#1abf89;line-height:2em;', 'font-family:cursor,monospace;color:#333;');
   };
 
-  // merge: make it easy to have a fallback
-  utils.merge = function(config) {
-
-    // default settings
-    var defaults = {
-      class: 'pen',
-      debug: false,
-      stay: config.stay || !config.debug,
-      textarea: '<textarea name="content"></textarea>',
-      list: [
-        'blockquote', 'h2', 'h3', 'p', 'insertorderedlist', 'insertunorderedlist', 'inserthorizontalrule',
-        'bold', 'codespan', 'italic', 'underline', 'createlink'
-      ]
-    };
-
-    // user-friendly config
-    if(config.nodeType === 1) {
-      defaults.editor = config;
-    } else if(config.match && config.match(/^#[\S]+$/)) {
-      defaults.editor = doc.getElementById(config.slice(1));
-    } else {
-      defaults = _.extend(defaults, config);
-    }
-
-    return defaults;
-  };
-
   Pen = function(config) {
 
     if(!config) return utils.log('can\'t find config', true);
 
     // merge user config
-    var defaults = utils.merge(config);
+    var options = _.extend(defaults, config);
 
-    if(defaults.editor.nodeType !== 1) return utils.log('can\'t find editor');
-    if(defaults.debug) window._pen_debug_mode_on = true;
+    if(options.editor.nodeType !== 1) return utils.log('can\'t find editor');
+    if(options.debug) window._pen_debug_mode_on = true;
 
-    var editor = defaults.editor;
+    var editor = options.editor;
 
     // set default class
-    editor.classList.add(defaults.class);
+    editor.classList.add(options.class);
 
     // set contenteditable
     var editable = editor.getAttribute('contenteditable');
     if(!editable) editor.setAttribute('contenteditable', 'true');
 
     // assign config
-    this.config = defaults;
+    this.config = options;
 
     // save the selection obj
     this._sel = doc.getSelection();
@@ -552,13 +535,13 @@
   FakePen = function(config) {
     if(!config) return utils.log('can\'t find config', true);
 
-    var defaults = utils.merge(config)
-      , klass = defaults.editor.getAttribute('class');
+    var options = _.extend(defaults, config)
+      , klass = options.editor.getAttribute('class');
 
-    klass = klass ? klass.replace(/\bpen\b/g, '') + ' pen-textarea ' + defaults.class : 'pen pen-textarea';
-    defaults.editor.setAttribute('class', klass);
-    defaults.editor.innerHTML = defaults.textarea;
-    return defaults.editor;
+    klass = klass ? klass.replace(/\bpen\b/g, '') + ' pen-textarea ' + options.class : 'pen pen-textarea';
+    options.editor.setAttribute('class', klass);
+    options.editor.innerHTML = options.textarea;
+    return options.editor;
   };
 
   // make it accessible
