@@ -221,7 +221,7 @@
       , highlight;
 
     // remove all highlights
-    [].slice.call(menu.querySelectorAll('.active')).forEach(function(el) {
+    _.map(menu.querySelectorAll('.active'), function(el) {
       el.classList.remove('active');
     });
 
