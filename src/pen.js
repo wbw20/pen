@@ -88,11 +88,11 @@
 
     var that = this, icons = '';
 
-    for(var i = 0, list = this.config.list; i < list.length; i++) {
-      var name = list[i], klass = 'pen-icon icon-' + name;
-      icons += '<i class="' + klass + '" data-action="' + name + '">' + (name.match(/^h[1-6]|p$/i) ? name.toUpperCase() : '') + '</i>';
-      if((name === 'createlink')) icons += '<input class="pen-input" placeholder="http://" />';
-    }
+    _.map(this.config.list, function(item) {
+      var klass = 'pen-icon icon-' + item;
+      icons += '<i class="' + klass + '" data-action="' + item + '">' + (item.match(/^h[1-6]|p$/i) ? item.toUpperCase() : '') + '</i>';
+      if((item === 'createlink')) icons += '<input class="pen-input" placeholder="http://" />';
+    });
 
     var menu = doc.createElement('div');
     menu.setAttribute('class', this.config.class + '-menu pen-menu');
