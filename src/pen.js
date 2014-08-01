@@ -346,100 +346,16 @@
     };
 
     codespan = function(name) {
-      var range = that._sel.getRangeAt(),
-          begins = range.startContainer.parentElement,
-          ends = range.endContainer.parentElement;
-
-      if (_isWithinCopespan(begins) && _isWithinCopespan(ends)) {
-        if (_isExactlyWithin(range, begins)) {
-          _deTag(begins, range);
-        } else if (begins !== ends) {
-          console.log('its the wierd case');
-          _merge(begins, ends, range);
-        }
-      } else if (_isWithinCopespan(begins)) {
-        _absorbRight(begins, range);
-      } else if (_isWithinCopespan(ends)) {
-        _absorbLeft(ends, range);
-      } else {
-        if (begins !== ends) {
-          console.log('selection cannot cross');
-        } else {
-          _tag(range);
-        }
-      }
-
-      return _highlight(range);
-    };
-
-    /* turn this range into a codespan */
-    _tag = function(range) {
-      var node = document.createElement('code');
-      range.surroundContents(node);
-      var children = node.getElementsByTagName('code');
-      for (var i = 0; i < children.length; i++) {
-        _deTag(children[i], range);
-      }
-    }
-
-    /* remove this node's tag, leaving only its innnerHTML in the parent */
-    _deTag = function(node, range) {
-      var parent = node.parentElement,
-          clone = document.createElement('el'),
-          start = range.startOffset, end = range.endOffset;
-
-      clone.innerHTML = node.innerHTML;
-      parent.replaceChild(clone, node);
-      parent.innerHTML = parent.innerHTML.replace(/(<\/?el>)/g, '');
-      range.selectNodeContents(parent);
-      return clone;
-    };
-
-    _absorbRight = function(node, range) {
-        range.setStartBefore(node);
-        range.surroundContents(document.createElement('code'));
-        _deTag(node, range);
-    };
-
-    _absorbLeft = function(node, range) {
-        range.setEndAfter(node);
-        range.surroundContents(document.createElement('code'));
-        _deTag(node, range);
-    };
-
-    _merge = function(left, right, range) {
-      range.setStartBefore(left);
-      range.setEndAfter(right);
-      range.surroundContents(document.createElement('code'));
-      _deTag(left, range);
-    };
-
-    _isExactlyWithin = function(range, node) {
-      return node.innerHTML === range.toString();
-    };
-
-    _highlight = function(range) {
-      that._sel.removeAllRanges();
-      that._sel.addRange(range);
-    };
-
-    _isWithinCopespan = function(node) {
-      while (node.tagName.toLowerCase() !== 'body') {
-        if (node.tagName.toLowerCase() === 'code') {
-          return true;
-        }
-
-        node = node.parentElement;
-      }
-
-      return false;
+      overall('bold', name);
+      var el = window.getSelection().focusNode.parentNode;
+      el.className += ' code';
     };
 
     this._actions = function(name, value) {
       if(name.match(reg.block)) {
         block(name);
       } else if(name.match(reg.codespan)) {
-        codespan(name);
+        codespan('code');
       } else if(name.match(reg.inline) || name.match(reg.source)) {
         overall(name, value);
       } else if(name.match(reg.insert)) {

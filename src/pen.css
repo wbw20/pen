@@ -16,7 +16,7 @@
 .pen em, .pen b, .pen strong{font-weight:700;}
 .pen pre{white-space:pre-wrap;padding:0.85em;background:#f8f8f8;}
 
-.pen code {
+.code {
   padding: 2px 0px;
   font-size: 16px;
   color: #d14;
