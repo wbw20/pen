@@ -13,7 +13,8 @@
     "wbw20"
   ],
   "dependencies": {
-    "underscore": "latest"
+    "underscore": "latest",
+    "jquery": "latest"
   },
   "license": "MIT",
   "ignore": [

@@ -41,7 +41,7 @@ module.exports = function(grunt) {
 
     concat: {
       build: {
-        src: ['bower_components/underscore/underscore.js', 'src/**/*.js'],
+        src: ['bower_components/underscore/underscore.js', 'bower_components/jquery/dist/jquery.js', 'src/**/*.js'],
         dest: 'build/pen.js',
       },
     },

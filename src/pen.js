@@ -346,9 +346,21 @@
     };
 
     codespan = function(name) {
+      var codespans = _.union($(that._sel.getRangeAt().startContainer).closest('b').toArray(),
+                             $(that._sel.getRangeAt().endContainer).closest('b').toArray());
+
+      codespans.forEach(function(codespan) {
+        $(codespan).removeClass('code');
+      });
+
       overall('bold', name);
-      var el = window.getSelection().focusNode.parentNode;
-      el.className += ' code';
+
+      var codespans = _.union($(that._sel.getRangeAt().startContainer).closest('b').toArray(),
+                             $(that._sel.getRangeAt().endContainer).closest('b').toArray());
+
+      codespans.forEach(function(codespan) {
+        $(codespan).addClass('code');
+      });
     };
 
     this._actions = function(name, value) {
