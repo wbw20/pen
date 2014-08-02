@@ -346,19 +346,21 @@
     };
 
     codespan = function(name) {
-      var codespans = _.union($(that._sel.getRangeAt().startContainer).closest('b').toArray(),
-                             $(that._sel.getRangeAt().endContainer).closest('b').toArray());
+      var before = _.union($(that._sel.getRangeAt().startContainer).closest('b').toArray(),
+                              $(that._sel.getRangeAt().endContainer).closest('b').toArray());
 
-      codespans.forEach(function(codespan) {
-        $(codespan).removeClass('code');
+      before.forEach(function(codespan) {
+        $(codespan).removeAttr('class');
       });
 
       overall('bold', name);
 
-      var codespans = _.union($(that._sel.getRangeAt().startContainer).closest('b').toArray(),
-                             $(that._sel.getRangeAt().endContainer).closest('b').toArray());
+      var removed = $(that._sel.getRangeAt().startContainer.parentNode).find('b:not([class])');
 
-      codespans.forEach(function(codespan) {
+      var after = _.union($(that._sel.getRangeAt().startContainer).closest('b').toArray(),
+                              $(that._sel.getRangeAt().endContainer).closest('b').toArray());
+
+      _.union(removed, after).forEach(function(codespan) {
         $(codespan).addClass('code');
       });
     };
