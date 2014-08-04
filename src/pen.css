@@ -85,29 +85,29 @@
 }
 
 /* headers */
-.pen h1, .pen h2, .pen h3, .pen h4, .pen h5, .pen h6 {
+.pen .h1, .pen .h2, .pen .h3, .pen .h4, .pen .h5, .pen .h6 {
   margin-bottom: 16px;
   font-weight: 700;
   line-height: 1.2;
 }
 
-.pen h1 {
+.pen .h1 {
   font-size: 2em;
 }
 
-.pen h2 {
+.pen .h2 {
   font-size: 1.8em;
 }
 
-.pen h3 {
+.pen .h3 {
   font-size: 1.6em;
 }
 
-.pen h4 {
+.pen .h4 {
   font-size: 1.4em;
 }
 
-.pen h5, .pen h6 {
+.pen .h5, .pen .h6 {
   font-size: 1.2em;
 }
 

@@ -312,8 +312,7 @@
 
     // allow command list
     reg = {
-      block: /^(?:p|h[1-6]|pre)$/,
-      blockquote: /^(?:blockquote)$/,
+      block: /^(?:p|h[1-6]|blockquote|pre)$/,
       codespan: /^(?:codespan)$/,
       inline: /^(?:bold|italic|underline|insertorderedlist|insertunorderedlist)$/,
       source: /^(?:insertimage|createlink|unlink)$/,
@@ -339,21 +338,13 @@
     };
 
     block = function(name) {
-      if(that._effectNode(that._sel.getRangeAt(0).startContainer, true).indexOf(name) !== -1) {
-        if(name === 'blockquote') return document.execCommand('outdent', false, null);
-        name = 'p';
-      }
-      return overall('formatblock', name);
-    };
-
-    blockquote = function(name) {
       var block = overall('formatblock', 'p');
 
       var after = _.union($(that._sel.getRangeAt().startContainer).closest('p').toArray(),
                           $(that._sel.getRangeAt().endContainer).closest('p').toArray());
 
       after.forEach(function(block) {
-        $(block).addClass('blockquote');
+        $(block).addClass(name);
       });
     };
 
@@ -380,8 +371,6 @@
     this._actions = function(name, value) {
       if(name.match(reg.block)) {
         block(name);
-      } else if (name.match(reg.blockquote)) {
-        blockquote();
       } else if(name.match(reg.codespan)) {
         codespan('code');
       } else if(name.match(reg.inline) || name.match(reg.source)) {
