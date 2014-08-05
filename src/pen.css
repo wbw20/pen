@@ -132,9 +132,23 @@
   list-style: circle;
 }
 
-.insertorderedlist, .insertunorderedlist {
+.insertunorderedlist {
   display: list-item;
+  list-style-type: disc;
   margin-left: 22px;
+}
+
+.insertorderedlist {
+  counter-increment: section;
+  margin-left: 3px;
+}
+
+.insertorderedlist:before {
+  content: counters(section," .") ". ";
+}
+
+:not(.insertorderedlist) + .insertorderedlist {
+  counter-reset: section;
 }
 
 /* pen menu */
