@@ -255,8 +255,6 @@
           return highlight('insertunorderedlist');
         case 'ol':
           return highlight('insertorderedlist');
-        case 'ol':
-          return highlight('insertorderedlist');
         default :
           highlight(tag);
       }
