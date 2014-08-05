@@ -1,5 +1,10 @@
 /*! Licensed under MIT, https://github.com/sofish/pen */
 
+.pen {
+  border: 1px solid gray;
+  padding: 20px;
+}
+
 /* basic reset */
 .pen, .pen-menu, .pen-input, .pen textarea {
   font: 400 1.16em/1.45 Palatino, Optima, Georgia, serif;
