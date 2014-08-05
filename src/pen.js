@@ -342,7 +342,7 @@
                           $(that._sel.getRangeAt().endContainer).closest('p').toArray());
 
       after.forEach(function(block) {
-        $(block).addClass(name);
+        $(block).removeClass().addClass(name);
       });
     };
 
