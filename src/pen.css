@@ -140,11 +140,12 @@
 
 .insertorderedlist {
   counter-increment: section;
-  margin-left: 3px;
+  margin-left: 22px;
 }
 
 .insertorderedlist:before {
   content: counters(section," .") ". ";
+  margin-left: -20px;
 }
 
 :not(.insertorderedlist) + .insertorderedlist {
