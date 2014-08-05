@@ -132,6 +132,11 @@
   list-style: circle;
 }
 
+.insertorderedlist, .insertunorderedlist {
+  display: list-item;
+  margin-left: 22px;
+}
+
 /* pen menu */
 .pen-menu, .pen-input {
   font-size: 14px;

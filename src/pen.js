@@ -310,9 +310,9 @@
 
     // allow command list
     reg = {
-      block: /^(?:p|h[1-6]|blockquote|pre)$/,
+      block: /^(?:p|h[1-6]|blockquote|pre|insertorderedlist|insertunorderedlist)$/,
       codespan: /^(?:codespan)$/,
-      inline: /^(?:bold|italic|underline|insertorderedlist|insertunorderedlist)$/,
+      inline: /^(?:bold|italic|underline)$/,
       source: /^(?:insertimage|createlink|unlink)$/,
       insert: /^(?:inserthorizontalrule|insert)$/
     };
