@@ -40,15 +40,33 @@ module.exports = function(grunt) {
     },
 
     concat: {
-      build: {
-        src: ['bower_components/underscore/underscore.js', 'bower_components/jquery/dist/jquery.js', 'src/**/*.js'],
-        dest: 'build/pen.js',
+      /* 1.  build source into pen.js */
+      pen: {
+        src: ['src/pen.js', 'src/js/**/*'],
+        dest: 'build/temp/pen.js',
+        options: {
+          banner: '(function(doc) {',
+          footer: '} (document));'
+        }
       },
+      /* 2.  build dependencies into vendor.js */
+      vendor: {
+        src: ['bower_components/underscore/underscore.js', 'bower_components/jquery/dist/jquery.js'],
+        dest: 'build/temp/vendor.js',
+      },
+      /* 3.  concat pen.js and vendor into a single file */
+      build: {
+        src: ['build/temp/vendor.js', 'build/temp/pen.js'],
+        dest: 'build/pen.js'
+      }
     },
+
+    /* 4.  remove build/temp */
+    clean: ['build/temp'],
 
     watch: {
       files: ['src/**/*.js', 'bower_components'],
-      tasks: ['concat']
+      tasks: ['default']
     }
   });
 
@@ -56,8 +74,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task(s).
-  grunt.registerTask('default', ['concat']);
+  grunt.registerTask('default', ['concat:pen', 'concat:vendor', 'concat:build', 'clean']);
 };
