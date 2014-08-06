@@ -58,6 +58,10 @@ module.exports = function(grunt) {
       build: {
         src: ['build/temp/vendor.js', 'build/temp/pen.js'],
         dest: 'build/pen.js'
+      },
+      css: {
+        src: 'src/css/**/*',
+        dest: 'build/pen.css'
       }
     },
 
@@ -78,5 +82,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task(s).
-  grunt.registerTask('default', ['concat:pen', 'concat:vendor', 'concat:build', 'clean']);
+  grunt.registerTask('default', ['concat:css', 'concat:pen', 'concat:vendor', 'concat:build', 'clean']);
 };
