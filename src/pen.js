@@ -142,39 +142,6 @@ function _block(node) {
   return node;
 }
 
-/* Are we at the start or end? */
-function _selectionInfo(el, range) {
-  var atStart = false, atEnd = false;
-  var testRange;
-  if (window.getSelection) {
-      var sel = window.getSelection();
-      if (sel.rangeCount) {
-          testRange = range.cloneRange();
-
-          testRange.selectNodeContents(el);
-          testRange.setEnd(range.startContainer, range.startOffset);
-          atStart = (testRange.toString() == "");
-
-          testRange.selectNodeContents(el);
-          testRange.setStart(range.endContainer, range.endOffset);
-          atEnd = (testRange.toString() == "");
-      }
-  } else if (document.selection && document.selection.type != "Control") {
-      range = document.selection.createRange();
-      testRange = range.duplicate();
-
-      testRange.moveToElementText(el);
-      testRange.setEndPoint("EndToStart", range);
-      atStart = (testRange.text == "");
-
-      testRange.moveToElementText(el);
-      testRange.setEndPoint("StartToEnd", range);
-      atEnd = (testRange.text == "");
-  }
-
-  return { atStart: atStart, atEnd: atEnd };
-}
-
 Pen.prototype.actions = function() {
   var that = this, reg, block, overall, insert;
 
