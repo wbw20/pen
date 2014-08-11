@@ -23,6 +23,7 @@ Pen.prototype.toolbar = function(options) {
   };
 
   this.apply = function(action, value) {
+    document.getSelection().addRange(self._range);
     self.execute(action, value);
     self.highlightItems();
   };
