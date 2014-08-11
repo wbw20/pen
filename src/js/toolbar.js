@@ -96,7 +96,7 @@ Pen.prototype.toolbar = function(options) {
     };
 
     effects.forEach(function(item) {
-      var tag = item.nodeName.toLowerCase();
+      var tag = item.className.toLowerCase();
       switch(tag) {
         case 'a':
           return (menu.querySelector('input').value = item.href), highlight('createlink');
