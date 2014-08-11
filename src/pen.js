@@ -44,21 +44,13 @@ Pen = function(config) {
   // save the selection obj
   this._sel = doc.getSelection();
 
-  // map actions
-  this.actions();
-
-  // enable toolbar
-  this.toolbar();
-
-  // enable markdown covert
-  if (this.markdown) {
-    this.markdown.init(this);
-  }
-
   // stay on the page
   if (this.config.stay) {
     this.stay();
   }
+
+  this.toolbar(this.config);
+  this.editor(this.config);
 };
 
 // make it accessible

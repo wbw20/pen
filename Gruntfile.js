@@ -65,6 +65,16 @@ module.exports = function(grunt) {
       }
     },
 
+    copy: {
+      fonts: {
+        cwd: 'src/font',
+        src: '**/*',
+        dest: 'build/font',
+        expand: true,
+        filter: 'isFile'
+      }
+    },
+
     /* 4.  remove build/temp */
     clean: ['build/temp'],
 
@@ -78,9 +88,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task(s).
-  grunt.registerTask('default', ['concat:css', 'concat:pen', 'concat:vendor', 'concat:build', 'clean']);
+  grunt.registerTask('default', ['concat:css', 'concat:pen', 'concat:vendor', 'concat:build', 'copy', 'clean']);
 };

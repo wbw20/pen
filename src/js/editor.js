@@ -1,21 +1,5 @@
-Pen.prototype.editor = function() {
-  
-};
-
-/* Get the relevant parent */
-function _block(node) {
-  while(node.nodeType !== 1) {
-    node = node.parentNode;
-  }
-
-  return node;
-}
-
-Pen.prototype.actions = function() {
-  var that = this, reg, block, overall, insert;
-
-  // allow command list
-  reg = {
+Pen.prototype.editor = function(options) {
+  this.reg = {
     block: /^(?:p|h[1-6]|blockquote|pre|insertorderedlist|insertunorderedlist)$/,
     codespan: /^(?:codespan)$/,
     inline: /^(?:bold|italic|underline)$/,
@@ -23,25 +7,27 @@ Pen.prototype.actions = function() {
     insert: /^(?:inserthorizontalrule|insert)$/
   };
 
-  overall = function(cmd, val) {
-    var message = ' to exec 「' + cmd + '」 command' + (val ? (' with value: ' + val) : '');
-    if(document.execCommand(cmd, false, val) && that.config.debug) {
-      utils.log('success' + message);
+  if (!window.onbeforeunload) {
+    window.onbeforeunload = function() {
+      if(!that._isDestroyed) return 'Are you going to leave here?';
+    };
+  };
+
+  this.apply = function(action, value) {
+    if(action.match(this.reg.block)) {
+      this.block(action);
+    } else if(action.match(this.reg.codespan)) {
+      this.codespan('code');
+    } else if(action.match(this.reg.inline) || action.match(this.reg.source)) {
+      this.overall(action, value);
+    } else if(action.match(this.reg.insert)) {
+      this.insert(action);
     } else {
-      utils.log('fail' + message);
+      if(this.config.debug) utils.log('can not find command function for name: ' + name + (value ? (', value: ' + value) : ''));
     }
   };
 
-  insert = function(name) {
-    var range = that._sel.getRangeAt(0)
-      , node = _block(range.startContainer);
-
-    range.selectNode(node);
-    range.collapse(false);
-    return overall(name);
-  };
-
-  block = function(name) {
+  this.block = function(name) {
     var block = overall('formatblock', 'p');
 
     var after = _.union($(that._sel.getRangeAt().startContainer).closest('p').toArray(),
@@ -52,7 +38,7 @@ Pen.prototype.actions = function() {
     });
   };
 
-  codespan = function(name) {
+  this.codespan = function(name) {
     var before = _.union($(that._sel.getRangeAt().startContainer).closest('b').toArray(),
                             $(that._sel.getRangeAt().endContainer).closest('b').toArray());
 
@@ -72,22 +58,33 @@ Pen.prototype.actions = function() {
     });
   };
 
-  this._actions = function(name, value) {
-    if(name.match(reg.block)) {
-      block(name);
-    } else if(name.match(reg.codespan)) {
-      codespan('code');
-    } else if(name.match(reg.inline) || name.match(reg.source)) {
-      overall(name, value);
-    } else if(name.match(reg.insert)) {
-      insert(name);
-    } else {
-      if(this.config.debug) utils.log('can not find command function for name: ' + name + (value ? (', value: ' + value) : ''));
-    }
+  this.insert = function(name) {
+    var range = that._sel.getRangeAt(0)
+      , node = _block(range.startContainer);
+
+    range.selectNode(node);
+    range.collapse(false);
+    return overall(name);
   };
 
-  return this;
+  this.overall = function(cmd, val) {
+    var message = ' to exec 「' + cmd + '」 command' + (val ? (' with value: ' + val) : '');
+    if(document.execCommand(cmd, false, val) && that.config.debug) {
+      utils.log('success' + message);
+    } else {
+      utils.log('fail' + message);
+    }
+  };
 };
+
+/* Get the relevant parent */
+function _block(node) {
+  while(node.nodeType !== 1) {
+    node = node.parentNode;
+  }
+
+  return node;
+}
 
 // show menu
 Pen.prototype.menu = function() {
@@ -134,31 +131,4 @@ Pen.prototype.menu = function() {
   menu.style.top = menuOffset.y + 'px';
   menu.style.left = menuOffset.x + 'px';
   return this;
-};
-
-Pen.prototype.stay = function() {
-  var that = this;
-  if (!window.onbeforeunload) {
-    window.onbeforeunload = function() {
-      if(!that._isDestroyed) return 'Are you going to leave here?';
-    };
-  }
-};
-
-Pen.prototype.destroy = function(isAJoke) {
-  var destroy = isAJoke ? false : true
-    , attr = isAJoke ? 'setAttribute' : 'removeAttribute';
-
-  if(!isAJoke) {
-    this._sel.removeAllRanges();
-    this._menu.style.display = 'none';
-  }
-  this._isDestroyed = destroy;
-  this.config.editor[attr]('contenteditable', '');
-
-  return this;
-};
-
-Pen.prototype.rebuild = function() {
-  return this.destroy('it\'s a joke');
 };
