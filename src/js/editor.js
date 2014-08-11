@@ -93,7 +93,6 @@ Pen.prototype.menu = function() {
     , menuPadding = 10
     , top = offset.top - menuPadding
     , left = offset.left + (offset.width / 2)
-    , menu = this._menu
     , menuOffset = { x: 0, y: 0 }
     , stylesheet = this._stylesheet;
 

@@ -46,6 +46,7 @@ Pen.prototype.toolbar = function(options) {
     if(!range.isCollapsed) {
       //show menu
       self._range = range.getRangeAt(0);
+      self.up();
       self.highlightItems();
     } else {
       //hide menu
@@ -54,6 +55,7 @@ Pen.prototype.toolbar = function(options) {
   }, 200);
 
   this.hide = function() {
+    if (!self._menu) { return; }
     self._menu.style.display = 'none';
   };
 
@@ -154,20 +156,22 @@ Pen.prototype.toolbar = function(options) {
     return nodes;
   }
 
-  var icons = '';
+  this.up = function() {
+    var icons = '';
 
-  _.map(options.list, function(item) {
-    var klass = 'pen-icon icon-' + item;
-    icons += '<i class="' + klass + '" data-action="' + item + '">' + (item.match(/^h[1-6]|p$/i) ? item.toUpperCase() : '') + '</i>';
-    if((item === 'createlink')) icons += '<input class="pen-input" placeholder="http://" />';
-  });
+    _.map(options.list, function(item) {
+      var klass = 'pen-icon icon-' + item;
+      icons += '<i class="' + klass + '" data-action="' + item + '">' + (item.match(/^h[1-6]|p$/i) ? item.toUpperCase() : '') + '</i>';
+      if((item === 'createlink')) icons += '<input class="pen-input" placeholder="http://" />';
+    });
 
-  var menu = doc.createElement('div');
-  menu.setAttribute('class', options.class + '-menu pen-menu');
-  menu.innerHTML = icons;
-  menu.style.display = 'none';
+    var menu = doc.createElement('div');
+    menu.setAttribute('class', options.class + '-menu pen-menu');
+    menu.innerHTML = icons;
 
-  doc.body.appendChild((self._menu = menu));
+    doc.body.appendChild((self._menu = menu));
+    menu.addEventListener('click', self.click);
+  }
 
   // change menu offset when window resize / scroll
   window.addEventListener('resize', self.hide);
@@ -178,5 +182,4 @@ Pen.prototype.toolbar = function(options) {
   editor.addEventListener('mouseup', self.toggle);
   editor.addEventListener('keyup', self.toggle);
   editor.addEventListener('keydown', self.linebreak);
-  menu.addEventListener('click', self.click);
 };
