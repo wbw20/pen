@@ -1,10 +1,6 @@
 Pen.prototype.toolbar = function(options) {
   var self = this;
 
-  this.toggle = function(event) {
-    if(!self._isDestroyed) self.show();
-  };
-
   this.click = function(event) {
     var action = event.target.getAttribute('data-action');
     if(!action) return;
@@ -23,15 +19,12 @@ Pen.prototype.toolbar = function(options) {
       return input.onkeypress;
     }
 
-    self.apply();
+    self.apply(action);
   };
 
-  this.apply = function(value) {
-    self._sel.removeAllRanges();
-    self._sel.addRange(self._range);
-    self._actions(action, value);
-    self._range = self._sel.getRangeAt(0);
-    self.highlightItems().menu();
+  this.apply = function(action, value) {
+    self.execute(action, value);
+    self.highlightItems();
   };
 
   this.createlink = function(input) {
@@ -41,28 +34,10 @@ Pen.prototype.toolbar = function(options) {
     self.apply();
   };
 
-  this.show = _.debounce(function() {
-    var range = self._sel;
-    if(!range.isCollapsed) {
-      //show menu
-      self._range = range.getRangeAt(0);
-      self.up();
-      self.highlightItems();
-    } else {
-      //hide menu
-      self.hide();
-    }
-  }, 200);
-
-  this.hide = function() {
-    if (!self._menu) { return; }
-    self._menu.style.display = 'none';
-  };
-
   this.linebreak = function(event) {
     if (event.which === 13) {
       var selection = window.getSelection(),
-          range = selection.getRangeAt(0),
+          range = self._range,
           parent = _block(range.startContainer),
           tag;
 
@@ -96,11 +71,10 @@ Pen.prototype.toolbar = function(options) {
   };
 
   this.highlightItems = function() {
-    var node = self._sel.focusNode,
-    effects = self.effectNode(node),
-    menu = self._menu,
-    linkInput = menu.querySelector('input'),
-    highlight;
+    var effects = self.effectNode(self._range.startContainer),
+        menu = self._menu,
+        linkInput = menu.querySelector('input'),
+        highlight;
 
     // remove all highlights
     _.map(menu.querySelectorAll('.active'), function(el) {
@@ -141,8 +115,6 @@ Pen.prototype.toolbar = function(options) {
           highlight(tag);
       }
     });
-
-    return self;
   };
 
   this.effectNode = function(el, returnAsNodeName) {
@@ -156,30 +128,23 @@ Pen.prototype.toolbar = function(options) {
     return nodes;
   }
 
-  this.up = function() {
-    var icons = '';
+  var icons = '<div>';
 
-    _.map(options.list, function(item) {
-      var klass = 'pen-icon icon-' + item;
-      icons += '<i class="' + klass + '" data-action="' + item + '">' + (item.match(/^h[1-6]|p$/i) ? item.toUpperCase() : '') + '</i>';
-      if((item === 'createlink')) icons += '<input class="pen-input" placeholder="http://" />';
-    });
+  _.map(options.list, function(item) {
+    var klass = 'pen-icon icon-' + item;
+    icons += '<i class="' + klass + '" data-action="' + item + '">' + (item.match(/^h[1-6]|p$/i) ? item.toUpperCase() : '') + '</i>';
+    if((item === 'createlink')) icons += '<input class="pen-input" placeholder="http://" />';
+  });
 
-    var menu = doc.createElement('div');
-    menu.setAttribute('class', options.class + '-menu pen-menu');
-    menu.innerHTML = icons;
+  icons += '</div>';
 
-    doc.body.appendChild((self._menu = menu));
-    menu.addEventListener('click', self.click);
-  }
+  var menu = doc.createElement('div');
+  menu.setAttribute('class', options.class + '-menu pen-menu');
+  menu.innerHTML = icons;
 
-  // change menu offset when window resize / scroll
-  window.addEventListener('resize', self.hide);
-  window.addEventListener('scroll', self.hide);
+  $('[data-toggle="toolbar"]').append((self._menu = menu));
+  menu.addEventListener('click', self.click);
 
   var editor = options.editor;
-
-  editor.addEventListener('mouseup', self.toggle);
-  editor.addEventListener('keyup', self.toggle);
   editor.addEventListener('keydown', self.linebreak);
 };

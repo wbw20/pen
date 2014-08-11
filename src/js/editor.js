@@ -1,4 +1,6 @@
 Pen.prototype.editor = function(options) {
+  var self = this;
+
   this.reg = {
     block: /^(?:p|h[1-6]|blockquote|pre|insertorderedlist|insertunorderedlist)$/,
     codespan: /^(?:codespan)$/,
@@ -9,29 +11,29 @@ Pen.prototype.editor = function(options) {
 
   if (!window.onbeforeunload) {
     window.onbeforeunload = function() {
-      if(!that._isDestroyed) return 'Are you going to leave here?';
+      if(!self._isDestroyed) return 'Are you going to leave here?';
     };
   };
 
-  this.apply = function(action, value) {
-    if(action.match(this.reg.block)) {
-      this.block(action);
-    } else if(action.match(this.reg.codespan)) {
-      this.codespan('code');
-    } else if(action.match(this.reg.inline) || action.match(this.reg.source)) {
-      this.overall(action, value);
-    } else if(action.match(this.reg.insert)) {
-      this.insert(action);
+  this.execute = function(action, value) {
+    if(action.match(self.reg.block)) {
+      self.block(action);
+    } else if(action.match(self.reg.codespan)) {
+      self.codespan('code');
+    } else if(action.match(self.reg.inline) || action.match(self.reg.source)) {
+      self.overall(action, value);
+    } else if(action.match(self.reg.insert)) {
+      self.insert(action);
     } else {
-      if(this.config.debug) utils.log('can not find command function for name: ' + name + (value ? (', value: ' + value) : ''));
+      if(self.config.debug) utils.log('can not find command function for name: ' + name + (value ? (', value: ' + value) : ''));
     }
   };
 
   this.block = function(name) {
-    var block = overall('formatblock', 'p');
+    var block = self.overall('formatblock', 'p');
 
-    var after = _.union($(that._sel.getRangeAt().startContainer).closest('p').toArray(),
-                        $(that._sel.getRangeAt().endContainer).closest('p').toArray());
+    var after = _.union($(self._range.startContainer).closest('p').toArray(),
+                        $(self._range.endContainer).closest('p').toArray());
 
     after.forEach(function(block) {
       $(block).removeClass().addClass(name);
@@ -39,19 +41,19 @@ Pen.prototype.editor = function(options) {
   };
 
   this.codespan = function(name) {
-    var before = _.union($(that._sel.getRangeAt().startContainer).closest('b').toArray(),
-                            $(that._sel.getRangeAt().endContainer).closest('b').toArray());
+    var before = _.union($(self._range.startContainer).closest('b').toArray(),
+                            $(self._range.endContainer).closest('b').toArray());
 
     before.forEach(function(codespan) {
       $(codespan).removeAttr('class');
     });
 
-    overall('bold', name);
+    self.overall('bold', name);
 
-    var removed = $(that._sel.getRangeAt().startContainer.parentNode).find('b:not([class])');
+    var removed = $(self._range.startContainer.parentNode).find('b:not([class])');
 
-    var after = _.union($(that._sel.getRangeAt().startContainer).closest('b').toArray(),
-                            $(that._sel.getRangeAt().endContainer).closest('b').toArray());
+    var after = _.union($(self._range.startContainer).closest('b').toArray(),
+                            $(self._range.endContainer).closest('b').toArray());
 
     _.union(removed, after).forEach(function(codespan) {
       $(codespan).addClass('code');
@@ -59,17 +61,17 @@ Pen.prototype.editor = function(options) {
   };
 
   this.insert = function(name) {
-    var range = that._sel.getRangeAt(0)
-      , node = _block(range.startContainer);
+    var range = self._range,
+        node = _block(range.startContainer);
 
     range.selectNode(node);
     range.collapse(false);
-    return overall(name);
+    return self.overall(name);
   };
 
   this.overall = function(cmd, val) {
     var message = ' to exec 「' + cmd + '」 command' + (val ? (' with value: ' + val) : '');
-    if(document.execCommand(cmd, false, val) && that.config.debug) {
+    if(document.execCommand(cmd, false, val) && self.config.debug) {
       utils.log('success' + message);
     } else {
       utils.log('fail' + message);
@@ -85,49 +87,3 @@ function _block(node) {
 
   return node;
 }
-
-// show menu
-Pen.prototype.menu = function() {
-
-  var offset = this._range.getBoundingClientRect()
-    , menuPadding = 10
-    , top = offset.top - menuPadding
-    , left = offset.left + (offset.width / 2)
-    , menuOffset = { x: 0, y: 0 }
-    , stylesheet = this._stylesheet;
-
-  // store the stylesheet used for positioning the menu horizontally
-  if(this._stylesheet === undefined) {
-    var style = document.createElement("style");
-    document.head.appendChild(style);
-    this._stylesheet = stylesheet = style.sheet;
-  }
-  // display block to caculate its width & height
-  menu.style.display = 'block';
-
-  menuOffset.x = left - (menu.clientWidth/2);
-  menuOffset.y = top - menu.clientHeight;
-
-  // check to see if menu has over-extended its bounding box. if it has,
-  // 1) apply a new class if overflowed on top;
-  // 2) apply a new rule if overflowed on the left
-  if(stylesheet.cssRules.length > 0) {
-    stylesheet.deleteRule(0);
-  }
-  if(menuOffset.x < 0) {
-    menuOffset.x = 0;
-    stylesheet.insertRule('.pen-menu:after { left: ' + left + 'px; }',0);
-  } else {
-    stylesheet.insertRule('.pen-menu:after { left: 50%; }',0);
-  }
-  if(menuOffset.y < 0) {
-    menu.classList.toggle('pen-menu-below', true);
-    menuOffset.y = offset.top + offset.height + menuPadding;
-  } else {
-    menu.classList.toggle('pen-menu-below', false);
-  }
-
-  menu.style.top = menuOffset.y + 'px';
-  menu.style.left = menuOffset.x + 'px';
-  return this;
-};

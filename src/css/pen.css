@@ -170,12 +170,15 @@
   background: #333;
   background-image: linear-gradient(to bottom, #222, #333);
   opacity: 0.9;
-  position: fixed;
   height: 36px;
   border: 1px solid #333;
   border-radius: 3px;
-  display: none;
   z-index: 1000;
+}
+
+.pen-menu > div {
+  width: 500px;
+  margin: 0px auto;
 }
 
 .pen-menu:after {

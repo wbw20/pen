@@ -20,6 +20,7 @@ utils.log = function(message, force) {
 };
 
 Pen = function(config) {
+  var self = this;
 
   if(!config) return utils.log('can\'t find config', true);
 
@@ -41,13 +42,15 @@ Pen = function(config) {
   // assign config
   this.config = options;
 
-  // save the selection obj
-  this._sel = doc.getSelection();
-
   // stay on the page
   if (this.config.stay) {
     this.stay();
   }
+
+  /* Always save selection */
+  $(config.editor).click(function() {
+    self._range = document.getSelection().getRangeAt();
+  });
 
   this.toolbar(this.config);
   this.editor(this.config);

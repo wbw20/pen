@@ -79,7 +79,7 @@ module.exports = function(grunt) {
     clean: ['build/temp'],
 
     watch: {
-      files: ['src/**/*.js', 'bower_components'],
+      files: ['src/**/*', 'bower_components'],
       tasks: ['default']
     }
   });
