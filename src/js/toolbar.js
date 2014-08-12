@@ -118,16 +118,16 @@ Pen.prototype.toolbar = function(options) {
     });
   };
 
-  this.effectNode = function(el, returnAsNodeName) {
+  this.effectNode = function(el) {
     var nodes = [];
     while(el !== options.editor) {
       if(el.nodeName.match(/(?:[pia]|\Au\z|\Ab\z|h[1-6]|code|[uo]l|li)/i)) {
-        nodes.push(returnAsNodeName ? el.nodeName.toLowerCase() : el);
+        nodes.push(el);
       }
       el = el.parentNode;
     }
     return nodes;
-  }
+  };
 
   var icons = '<div>';
 
