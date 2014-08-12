@@ -50,6 +50,7 @@ Pen = function(config) {
   /* Always save selection */
   $(config.editor).click(function() {
     self._range = document.getSelection().getRangeAt();
+    self.highlightItems();
   });
 
   this.toolbar(this.config);
